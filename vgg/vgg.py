@@ -15,7 +15,7 @@ import numpy as np
 from scipy.misc import imread, imresize
 from imagenet_classes import class_names
 
-dir = os.path.dirname(os.path.realpath(__file__)) + '/..'
+dir = os.path.dirname(os.path.realpath(__file__))
 
 class vgg16:
     def __init__(self, imgs, weights=None, sess=None):
@@ -203,7 +203,7 @@ class vgg16:
             biases = tf.Variable(tf.constant(0.0, shape=[512], dtype=tf.float32),
                                  trainable=True, name='biases')
             out = tf.nn.bias_add(conv, biases)
-            self.conv5_3 = tf.nn.relu(out, name=scope, name="last_conv")
+            self.conv5_3 = tf.nn.relu(out, name=scope)
             self.parameters += [kernel, biases]
 
         # pool5
