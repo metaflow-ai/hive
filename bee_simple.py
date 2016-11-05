@@ -78,6 +78,19 @@ class Bee_simple(object):
             self.y_plh: y_batch
         })
 
+    def eval(self, args, test_data):
+        x_test_batch, y_test_batch = util.preprocess(test_data)
+        checkpoint = tf.train.get_checkpoint_state(args.model_folder)
+        with tf.Session(graph=self.graph) as sess:
+            print("Init models")
+            self.saver.restore(sess, checkpoint.model_checkpoint_path)
+        
+            acc = sess.run(self.accuracy, feed_dict={
+                self.x_plh: x_test_batch,
+                self.y_plh: y_test_batch
+            })
+            print('Accuracy on test data: %f' % acc)
+
     def fit(self, args, train_data, dev_data):
         x_dev_batch, y_dev_batch = util.preprocess(dev_data)
         with tf.Session(graph=self.graph) as sess:

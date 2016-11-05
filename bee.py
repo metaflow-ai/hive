@@ -1,8 +1,6 @@
-import os, time, argparse, json
+import os, time
 
 import tensorflow as tf
-from scipy.misc import imread, imresize
-
 import util
 
 dir = os.path.dirname(os.path.realpath(__file__))
@@ -15,16 +13,16 @@ class Bee_vgg(object):
         print('Building bee graph')
         with self.graph.as_default():
             print('Loading vgg_graph')
-            vgg_saver = tf.train.import_meta_graph(dir + '/vgg/results/vgg-16.meta')
+            self.vgg_saver = tf.train.import_meta_graph(dir + '/vgg/results/vgg-16.meta')
             vgg_graph = tf.get_default_graph()
 
-            x_plh = vgg_graph.get_tensor_by_name('input:0')
+            self.x_plh = vgg_graph.get_tensor_by_name('input:0')
             conv5_3 =vgg_graph.get_tensor_by_name('conv5_3:0')
 
             print('Building bee graph')
             with tf.variable_scope("placeholder"):
-                y_plh = tf.placeholder(tf.int32, shape=[None, 1])
-                y_true_reshaped = tf.reshape(y_plh, [-1])
+                self.y_plh = tf.placeholder(tf.int32, shape=[None, 1])
+                y_true_reshaped = tf.reshape(self.y_plh, [-1])
 
             # First compresse channel wise
             with tf.variable_scope("bee_conv"):
