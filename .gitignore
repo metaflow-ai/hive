@@ -87,3 +87,13 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# OSX
+__MACOSX
+
+# App
+vgg/vgg16*
+vgg/laska.png
+vgg/results
+results
+dataset/*
