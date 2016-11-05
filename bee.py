@@ -90,25 +90,31 @@ def preprocess(data):
     return x, y
 
 def ptb_iterator(raw_data, batch_size):
-  data_len = len(raw_data)
-  batch_len = data_len // batch_size
-  data = []
-  for i in range(batch_size):
-    data.append(raw_data[batch_len * i:batch_len * (i + 1)])
+    data_len = len(raw_data)
+    batch_len = data_len // batch_size
+    data = []
+    for i in range(batch_len):
+        data.append(raw_data[batch_size * i:batch_size * (i + 1)])
 
-  epoch_size = (batch_len - 1)
-  if epoch_size == 0:
-    raise ValueError("epoch_size == 0, decrease batch_size")
+    epoch_size = (batch_len - 1)
+    if epoch_size == 0:
+        raise ValueError("epoch_size == 0, decrease batch_size")
 
-  for i in range(epoch_size):
-    x, y = preprocess(data[i])
-    yield x, y
+    # print('epoch_size: %d, data_len: %d' % (epoch_size, len(data)))
+    for i in range(epoch_size):
+        x, y = preprocess(data[i])
+        print(x.shape,y.shape)
+        yield x, y
 
+print('Loading datasets')
 with open(dir + '/dataset/data.json') as data_file:    
     data = json.load(data_file)
     train_data = data['train_data']
     x_dev_batch, y_dev_batch = preprocess(data['dev_data'])
+    print(x_dev_batch.shape, y_dev_batch.shape)
     x_test_batch, y_test_batch = preprocess(data['test_data'])
+    print(x_test_batch.shape, y_test_batch.shape)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -130,7 +136,6 @@ if __name__ == '__main__':
         for i in range(args.num_epochs):
             train_iterator = ptb_iterator(train_data, args.batch_size)
             for x_batch, y_batch in train_iterator:
-                print('biboup')
                 _, train_summaries, total_loss, current_step = train_step(sess, x_batch, y_batch)
                 sw.add_summary(train_summaries, current_step)
 

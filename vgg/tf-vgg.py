@@ -5,7 +5,7 @@ import numpy as np
 from scipy.misc import imread, imresize
 from imagenet_classes import class_names
 
-dir = os.path.dirname(os.path.realpath(__file__)) + '/..'
+dir = os.path.dirname(os.path.realpath(__file__))
 
 saver = tf.train.import_meta_graph(dir + '/results/vgg-16.meta')
 graph = tf.get_default_graph()
