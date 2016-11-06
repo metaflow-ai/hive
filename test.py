@@ -1,4 +1,4 @@
-import os, argparse, json
+import os, time, argparse, json
 
 from bee_simple import Bee_simple
 
@@ -13,5 +13,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--model_folder", type=str, help="How many epochs should we train the GloVe (default: %(default)s)")
 args = parser.parse_args()
 
+start = time.clock()
 model = Bee_simple()
 model.eval(args, test_data)
+end = time.clock()
+print('time spent predicting:', end - start)
