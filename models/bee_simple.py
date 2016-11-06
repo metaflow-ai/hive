@@ -8,7 +8,7 @@ dir = os.path.dirname(os.path.realpath(__file__))
 
 class Bee_simple(object):
     def __init__(self):
-        self.result_folder = dir + '/results/' + str(int(time.time()))
+        self.result_folder = dir + '/../results/' + str(int(time.time()))
         self.graph = tf.Graph()
 
         print('Building bee graph')
@@ -110,8 +110,10 @@ class Bee_simple(object):
             print('Accuracy on test data: %f' % acc)
 
     def fit(self, args, train_data, dev_data):
+        print(self.result_folder)
         x_dev_batch, y_dev_batch = util.preprocess(dev_data)
         with tf.Session(graph=self.graph) as sess:
+            tf.train.write_graph(sess.graph_def, self.result_folder, 'bee.pb', as_text=False)
             sw = tf.train.SummaryWriter(self.result_folder, sess.graph)
 
             print("Init models")
@@ -133,4 +135,6 @@ class Bee_simple(object):
                 print('Epoch: %d, Accuracy: %f' % (i + 1, epoch_acc))
 
             self.saver.save(sess, self.result_folder + '/bee.chkp')
-
+            with open(self.result_folder + '/bee_saver_def.pb', 'wb') as f:
+                saver_def = self.saver.as_saver_def().SerializeToString()
+                f.write(saver_def)

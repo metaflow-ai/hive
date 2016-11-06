@@ -258,7 +258,7 @@ class vgg16:
 if __name__ == '__main__':
     with tf.Session() as sess:
         print("Building the model")
-        imgs = tf.placeholder(tf.float32, [None, 224, 224, 3], name="input")
+        imgs = tf.placeholder(tf.float32, [None, None, None, 3], name="input")
         vgg = vgg16(imgs, 'vgg16_weights.npz', sess)
 
         saver = tf.train.Saver()

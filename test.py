@@ -1,6 +1,6 @@
 import os, time, argparse, json
 
-from bee_simple import Bee_simple
+from models.bee_simple import Bee_simple
 
 dir = os.path.dirname(os.path.realpath(__file__))
 

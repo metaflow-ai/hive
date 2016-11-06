@@ -112,3 +112,6 @@ class Bee_vgg(object):
 
             self.saver.save(sess, self.result_folder + '/bee.chkp')
 
+            with open(self.result_folder + '/bee_saver_def.pb', 'w') as f:
+                f.write(self.saver.as_saver_def())
+
