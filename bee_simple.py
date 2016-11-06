@@ -3,6 +3,7 @@ import tensorflow as tf
 
 import util
 
+# Params: (5 * 5 * 3 * 32 + 32) + (5 * 5 * 32 * 32 + 32) * 2 +  32 * 8 * 8 * 100 + 100 * 2
 dir = os.path.dirname(os.path.realpath(__file__))
 
 class Bee_simple(object):
@@ -19,15 +20,27 @@ class Bee_simple(object):
 
             # First compresse channel wise
             with tf.variable_scope("bee_conv"):
-                W1 = tf.get_variable('W1', shape=[3, 3, 3, 32], initializer=tf.random_normal_initializer(stddev=1e-1))
+                W1 = tf.get_variable('W1', shape=[5, 5, 3, 32], initializer=tf.random_normal_initializer(stddev=1e-1))
                 b1 = tf.get_variable('b1', shape=[32], initializer=tf.constant_initializer(0.1))
-                z = tf.nn.conv2d(self.x_plh, W1, strides=[1, 1, 1, 1], padding='SAME') + b1
+                z = tf.nn.conv2d(self.x_plh, W1, strides=[1, 2, 2, 1], padding='SAME') + b1
                 a = tf.nn.relu(z)
 
-                W2 = tf.get_variable('W2', shape=[3, 3, 32, 32], initializer=tf.random_normal_initializer(stddev=1e-1))
+                W2 = tf.get_variable('W2', shape=[5, 5, 32, 32], initializer=tf.random_normal_initializer(stddev=1e-1))
                 b2 = tf.get_variable('b2', shape=[32], initializer=tf.constant_initializer(0.1))
-                z = tf.nn.conv2d(a, W2, strides=[1, 1, 1, 1], padding='SAME') + b2
+                z = tf.nn.conv2d(a, W2, strides=[1, 2, 2, 1], padding='SAME') + b2
                 a = tf.nn.relu(z)
+
+                W3 = tf.get_variable('W3', shape=[5, 5, 32, 32], initializer=tf.random_normal_initializer(stddev=1e-1))
+                b3 = tf.get_variable('b3', shape=[32], initializer=tf.constant_initializer(0.1))
+                z = tf.nn.conv2d(a, W3, strides=[1, 2, 2, 1], padding='SAME') + b3
+                a = tf.nn.relu(z)
+
+                tf.histogram_summary("W1", W1)
+                tf.histogram_summary("b1", b1)
+                tf.histogram_summary("W2", W2)
+                tf.histogram_summary("b2", b2)
+                tf.histogram_summary("W3", W3)
+                tf.histogram_summary("b3", b3)
 
             with tf.variable_scope("classifier"):
                 shape = a.get_shape().as_list()
@@ -42,6 +55,11 @@ class Bee_simple(object):
                 W_fc2 = tf.get_variable('W_fc2', shape=[100, 2], initializer=tf.random_normal_initializer(stddev=1e-1))
                 b_fc2 = tf.get_variable('b_fc2', shape=[2], initializer=tf.constant_initializer(0.1))
                 z = tf.matmul(a, W_fc2) + b_fc2
+
+                tf.histogram_summary("W_fc1", W_fc1)
+                tf.histogram_summary("b_fc1", b_fc1)
+                tf.histogram_summary("W_fc2", W_fc2)
+                tf.histogram_summary("b_fc2", b_fc2)
 
             with tf.variable_scope('loss'):
                 losses = tf.nn.sparse_softmax_cross_entropy_with_logits(z, y_true_reshaped)
