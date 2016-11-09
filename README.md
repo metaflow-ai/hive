@@ -18,7 +18,14 @@ Completely blowing up previous bees larvae detections i know of using OpenCV, an
 
 This continue to validate the fact that deep learning is very well suited to handle real life variance.
 
-- The second model is not really useful for bees larvae detection, yet it shows how it is easy to fine-tune a model using TensorFlow (The VGG-19 model was taken from this (site)[https://www.cs.toronto.edu/~frossard/post/vgg16/]).
+- The second model is not really useful for bees larvae detection, yet it shows how it is easy to fine-tune a model using TensorFlow (The VGG-19 model was taken from this [site](https://www.cs.toronto.edu/~frossard/post/vgg16/)).
+
+- The training phase is interesting in terms of overfitting:
+![Training phase](assets/larvae-detector-learning.png)
+
+We can see that we reach 0 percent error which means we completely overfit the data, yet the generalization on the dev sets keeps also improving.
+
+This is a clear indicator that more data would improve even more the accuracy of the simple model. Also we probably can simplify it even further.
 
 ## Usage
 - Run the `./vgg/download.sh` script to download pretrained vgg weights

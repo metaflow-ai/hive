@@ -90,6 +90,7 @@ ENV/
 
 # OSX
 __MACOSX
+.DS_Store
 
 # App
 vgg/vgg16*
