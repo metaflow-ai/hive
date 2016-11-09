@@ -1,8 +1,8 @@
 # Hive
 
-Hi(ve)!
+Hi(ve)! :honeybee:
 
-This repo is the result of some work done in the Startup Weekend AI in Paris.
+This repo is the result of some work done in the Startup Weekend AI in Paris. :neckbeard:
 
 It contains two models:
 - The first one is a very simple model based on CNN up-to-date best practice, reaching 98% percent accuracy
@@ -14,18 +14,18 @@ This repo does not contains the trainings/dev/test sets due to proprietary conce
 ## Take aways
 - The simple model which take 3MB of memories and 6ms (on titan X) to compute an image is god damn accurate! 
 
-Completely blowing up previous bees larvae detections i know of using OpenCV, and this was achieved thanks to only 2000 training samples which is a very small dataset.
+Completely blowing up previous bees larvae detections i know of using OpenCV, and this was achieved thanks to only 2000 training samples which is a very small dataset. Also, it took less than 10 minutes to train it :rocket:
 
-This continue to validate the fact that deep learning is very well suited to handle real life variance.
+This validate again and gain the fact that deep learning is very well suited to handle real life data and its variability.
 
-- The second model is not really useful for bees larvae detection, yet it shows how it is easy to fine-tune a model using TensorFlow (The VGG-19 model was taken from this [site](https://www.cs.toronto.edu/~frossard/post/vgg16/)).
+- The second model is not really useful for *bees larvae detection*, yet it shows how it is easy to fine-tune a model using TensorFlow (The VGG-19 model was taken from this [site](https://www.cs.toronto.edu/~frossard/post/vgg16/)).
 
-- The training phase is interesting in terms of overfitting:
+The training phase is interesting in terms of overfitting:
 ![Training phase](assets/larvae-detector-learning.png)
 
-We can see that we reach 0 percent error which means we completely overfit the data, yet the generalization on the dev set keeps improving.
+We can see that we reach 0% (:scream:) error on the training set which means we completely overfit the data, yet the generalization on the dev set keeps improving until no learning is possible anymore.
 
-This is a clear indicator that more data would improve even more the accuracy of the simple model. Also we probably can simplify it even further.
+This is a clear indicator that more data would improve even more the accuracy, also we probably can simplify it even further and improve performance for this simple binary classifier.
 
 ## Usage
 - Run the `./vgg/download.sh` script to download pretrained vgg weights
