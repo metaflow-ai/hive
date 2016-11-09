@@ -23,7 +23,7 @@ This continue to validate the fact that deep learning is very well suited to han
 - The training phase is interesting in terms of overfitting:
 ![Training phase](assets/larvae-detector-learning.png)
 
-We can see that we reach 0 percent error which means we completely overfit the data, yet the generalization on the dev sets keeps also improving.
+We can see that we reach 0 percent error which means we completely overfit the data, yet the generalization on the dev set keeps improving.
 
 This is a clear indicator that more data would improve even more the accuracy of the simple model. Also we probably can simplify it even further.
 
