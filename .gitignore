@@ -95,5 +95,5 @@ __MACOSX
 vgg/vgg16*
 vgg/laska.png
 vgg/results
-results
+results/*
 dataset/*

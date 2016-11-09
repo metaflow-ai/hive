@@ -110,7 +110,6 @@ class Bee_simple(object):
             print('Accuracy on test data: %f' % acc)
 
     def fit(self, args, train_data, dev_data):
-        print(self.result_folder)
         x_dev_batch, y_dev_batch = util.preprocess(dev_data)
         with tf.Session(graph=self.graph) as sess:
             tf.train.write_graph(sess.graph_def, self.result_folder, 'bee.pb', as_text=False)

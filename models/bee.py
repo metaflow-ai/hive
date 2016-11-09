@@ -17,21 +17,27 @@ class Bee_vgg(object):
             vgg_graph = tf.get_default_graph()
 
             self.x_plh = vgg_graph.get_tensor_by_name('input:0')
-            conv5_3 =vgg_graph.get_tensor_by_name('conv5_3:0')
+            # Choose where you want to cut the VGG model
+            output_conv =vgg_graph.get_tensor_by_name('conv1_2:0')
+            # output_conv =vgg_graph.get_tensor_by_name('conv2_2:0')
+            # output_conv =vgg_graph.get_tensor_by_name('conv3_3:0')
+            # output_conv =vgg_graph.get_tensor_by_name('conv4_3:0')
+            # output_conv =vgg_graph.get_tensor_by_name('conv5_3:0')
 
             print('Building bee graph')
             with tf.variable_scope("placeholder"):
                 self.y_plh = tf.placeholder(tf.int32, shape=[None, 1])
                 y_true_reshaped = tf.reshape(self.y_plh, [-1])
 
-            # First compresse channel wise
+            # First compresse channel wise to optimize the weights size
             with tf.variable_scope("bee_conv"):
-                W1 = tf.get_variable('W1', shape=[1, 1, 512, 32], initializer=tf.random_normal_initializer(stddev=1e-1))
+                output_conv_shape = output_conv.get_shape().as_list()
+                W1 = tf.get_variable('W1', shape=[1, 1, output_conv_shape[3], 32], initializer=tf.random_normal_initializer(stddev=1e-1))
                 tf.add_to_collection("bee_vars", W1)
                 b1 = tf.get_variable('b1', shape=[32], initializer=tf.constant_initializer(0.1))
                 tf.add_to_collection("bee_vars", b1)
 
-                z1 = tf.nn.conv2d(conv5_3, W1, strides=[1, 1, 1, 1], padding='SAME') + b1
+                z1 = tf.nn.conv2d(output_conv, W1, strides=[1, 1, 1, 1], padding='SAME') + b1
                 a = tf.nn.relu(z1)
 
             with tf.variable_scope("classifier"):

@@ -1,41 +1,34 @@
 import os, argparse
 
 import tensorflow as tf
-import freeze_graph as freeze_tools
 
 dir = os.path.dirname(os.path.realpath(__file__))
 
 def freeze_graph(model_folder):
+    from tensorflow.python.framework import graph_util
+
     checkpoint = tf.train.get_checkpoint_state(args.model_folder)
     input_checkpoint = checkpoint.model_checkpoint_path
     absolute_model_folder = "/".join(input_checkpoint.split('/')[:-1])
-    absolute_prefix_filename = input_checkpoint.split('.chkp')[0]
-    input_graph = absolute_prefix_filename + '.pb'
-    input_saver = absolute_prefix_filename + '_saver_def.pb'
-    input_binary = True
-
     output_node_names = "Accuracy/predictions"
-    restore_op_name = None
-    filename_tensor_name = "save/Const:0"
-    output_graph = absolute_model_folder + "/frozen_model.pb"
+    output_graph = absolute_model_folder + "/frozen_model_2.pb"
     clear_devices = True
-    initializer_nodes = None
-    freeze_tools.freeze_graph(
-        input_graph, 
-        input_saver,
-        input_binary, 
-        input_checkpoint,
-        output_node_names, 
-        restore_op_name,
-        filename_tensor_name, 
-        output_graph,
-        clear_devices, 
-        initializer_nodes
-    )
+    
+    saver = tf.train.import_meta_graph(input_checkpoint + '.meta', clear_devices=clear_devices)
+    graph = tf.get_default_graph()
+    input_graph_def = graph.as_graph_def()
+    with tf.Session() as sess:
+        saver.restore(sess, input_checkpoint)
+        output_graph_def = graph_util.convert_variables_to_constants(
+            sess, input_graph_def, output_node_names.split(","))
+
+        with tf.gfile.GFile(output_graph, "wb") as f:
+            f.write(output_graph_def.SerializeToString())
+        print("%d ops in the final graph." % len(output_graph_def.node))
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--model_folder", type=str, help="How many epochs should we train the GloVe (default: %(default)s)")
+parser.add_argument("--model_folder", type=str, help="Model folder to export")
 args = parser.parse_args()
 
 freeze_graph(args.model_folder)
